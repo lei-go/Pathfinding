@@ -6,8 +6,26 @@ using UnityEngine;
 public class GraphView : MonoBehaviour
 {
     public GameObject nodeViewPrefab;
+    public NodeView[,] nodeViews;
     public Color baseColor = Color.white;
     public Color wallColor = Color.black;
+
+    //versus the single ColorNode in the NodeView class, this one colors a bunch nodes at the same time
+    public void ColorNodes(List<Node> nodes, Color color)
+    {
+        foreach (Node n in nodes)
+        {
+            if (n != null)
+            {
+                NodeView nodeView = nodeViews[n.xIndex,n.yIndex];
+
+                if (nodeView != null)
+                {
+                    nodeView.ColorNode(color);
+                }
+            }
+        }
+    }
 
     public void Init(Graph graph)
     {
@@ -16,7 +34,10 @@ public class GraphView : MonoBehaviour
             Debug.LogWarning("GRAPHVIEW no graph initialized");
             return;
         }
+
         //otherwise
+        nodeViews = new NodeView[graph.Width, graph.Height];
+
         foreach (Node n in graph.nodes)
         {
             GameObject instance = Instantiate(nodeViewPrefab, Vector3.zero, Quaternion.identity);
@@ -25,6 +46,7 @@ public class GraphView : MonoBehaviour
             if (nodeView != null)
             {
                 nodeView.Init(n);
+                nodeViews[n.xIndex,n.yIndex] = nodeView;
 
                 if (n.nodeType == NodeType.Blocked)
                 {

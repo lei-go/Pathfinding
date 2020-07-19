@@ -13,8 +13,9 @@ public class Graph : MonoBehaviour
     //cache the could-be useful data. reduncdant but ok.
     int[,] m_mapData;
     int m_width;
+    public int Width { get {return m_width; } }
     int m_height;
-
+    public int Height { get {return m_height; } } //a read-only public variable
     public static readonly Vector2[] allDirections =
     {
         new Vector2(0f,1f),
