@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public enum NodeType //enum is like creating a variable type by ourselves
 {
     Open = 0,

@@ -15,6 +15,20 @@ public class Graph : MonoBehaviour
     int m_width;
     int m_height;
 
+    public static readonly Vector2[] allDirections =
+    {
+        new Vector2(0f,1f),
+        new Vector2(0f,-1f),
+        new Vector2(-1f,0f),
+        new Vector2(1f,0f),
+        /*
+        new Vector2(-1f,1f),
+        new Vector2(1f,1f),
+        new Vector2(-1f,-1f),
+        new Vector2(1f,-1f)
+        */
+    };
+
     public void Init(int[,] mapData)
     {
         m_mapData = mapData;
@@ -22,6 +36,7 @@ public class Graph : MonoBehaviour
         m_height = mapData.GetLength(1);
         nodes = new Node[m_width, m_height];
 
+        //first populate the node array
         for (int y = 0; y < m_height; y++)
         {
             for (int x = 0; x < m_width; x++)
@@ -39,6 +54,49 @@ public class Graph : MonoBehaviour
             }
         }
 
+        //then find the neighbors
+        for (int y = 0; y < m_height; y++)
+        {
+            for (int x = 0; x < m_width; x++)
+            {
+                if (nodes[x,y].nodeType != NodeType.Blocked)
+                {
+                    nodes[x,y].neighbors = GetNeighbors(x,y);
+                }
+            }
+        }
+
     }
+
+    public bool IsWithinBounds(int x, int y)
+    {
+        return (x >= 0 && x < m_width && y >= 0 && y < m_height);
+    }
+
+    List<Node> GetNeighbors(int x, int y, Node[,] nodeArray, Vector2[] directions)
+    {
+        List<Node> neighborNodes = new List<Node>();
+
+        foreach (Vector2 dir in directions)
+        {
+            int newX = x + (int) dir.x;
+            int newY = y + (int) dir.y;
+            
+            //when new calculated coordinate is within bounds and not null, and it is not of type wall/blocked, we say it is a valid neighbor 
+            if (IsWithinBounds(newX, newY) && nodeArray[newX,newY] != null && nodeArray[newX,newY].nodeType != NodeType.Blocked)
+            {
+                neighborNodes.Add(nodeArray[newX,newY]);
+            }  
+        }
+
+        return neighborNodes;
+    }
+
+    //to simply our usage of the Getneighbor functions, make an overloaded version taking only x,y as inputs
+    List<Node> GetNeighbors(int x, int y)
+    {
+        return GetNeighbors(x, y, nodes, allDirections);
+    }
+
 
 }
