@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &5346830407288764590
+--- !u!1 &8882643612568958467
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 5346830407288764588}
-  - component: {fileID: 5346830407288764591}
+  - component: {fileID: 4278634711729527962}
+  - component: {fileID: 3761906789197050464}
   m_Layer: 0
-  m_Name: DemoController
+  m_Name: Pathfinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &5346830407288764588
+--- !u!4 &4278634711729527962
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5346830407288764590}
+  m_GameObject: {fileID: 8882643612568958467}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -31,22 +31,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5346830407288764591
+--- !u!114 &3761906789197050464
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5346830407288764590}
+  m_GameObject: {fileID: 8882643612568958467}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 397e5a1c59a26ea4bb52cb9465189143, type: 3}
+  m_Script: {fileID: 11500000, guid: 77ceb1c6cab78804b97ebe8f2896f886, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapData: {fileID: 0}
-  graph: {fileID: 0}
-  pathfinder: {fileID: 0}
-  startX: 1
-  startY: 123
-  goalX: 126
-  goalY: 4
+  startColor: {r: 0, g: 1, b: 0, a: 1}
+  goalColor: {r: 1, g: 0, b: 0, a: 1}
+  frontierColor: {r: 1, g: 0, b: 1, a: 1}
+  exploredColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  pathColor: {r: 0, g: 1, b: 1, a: 1}

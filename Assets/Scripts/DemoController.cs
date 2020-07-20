@@ -6,6 +6,12 @@ public class DemoController : MonoBehaviour
 {
     public MapData mapData;
     public Graph graph;
+    public Pathfinder pathfinder;
+    public int startX = 1;
+    public int startY = 123;
+    public int goalX = 126;
+    public int goalY = 4;
+    public float timeStep = 0.1f;
 
     void Start()
     {
@@ -20,7 +26,20 @@ public class DemoController : MonoBehaviour
             {
                 graphView.Init(graph);
             }
+
+            if (graph.IsWithinBounds(startX,startY) && graph.IsWithinBounds(goalX,goalY)
+            && pathfinder != null)
+            {
+                Node startNode = graph.nodes[startX,startY];
+                Node goalNode = graph.nodes[goalX,goalY];
+                pathfinder.Init(graph,graphView,startNode,goalNode);
+                StartCoroutine(pathfinder.SearchRoutine(timeStep));
+            }
         }
+
     }
+
+
+
 
 }
