@@ -43,10 +43,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 397e5a1c59a26ea4bb52cb9465189143, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapData: {fileID: 0}
-  graph: {fileID: 0}
-  pathfinder: {fileID: 0}
-  startX: 1
-  startY: 123
-  goalX: 126
-  goalY: 4
+  mapData: {fileID: 1829513791205236384, guid: 34ee6fa59c155b14c94d0d831da04632, type: 3}
+  graph: {fileID: 1462001326696874761, guid: 46f4a59b0f5e2f3418d269b24f788c91, type: 3}
+  pathfinder: {fileID: 3761906789197050464, guid: 0b87e1ca80fdcc84d9608a08c4202941,
+    type: 3}
+  startX: 0
+  startY: 17
+  goalX: 32
+  goalY: 1
+  timeStep: 0.05
