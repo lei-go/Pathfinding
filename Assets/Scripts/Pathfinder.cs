@@ -6,6 +6,13 @@ using System;
 
 public class Pathfinder : MonoBehaviour
 {
+    public enum Mode
+    {
+        BFS = 0,
+        Dijkstra = 1
+    }
+
+    public Mode mode = Mode.BFS;
     Node m_startNode;
     Node m_goalNode;
     Graph m_graph;
@@ -30,7 +37,8 @@ public class Pathfinder : MonoBehaviour
     public bool showColor = true;
     public bool exitOnGoal = true;
     int m_iterations = 0;
-
+    
+    
     public void Init(Graph graph, GraphView graphView, Node start, Node goal)
     {
         if (graph == null || graphView == null || start == null || goal == null)
@@ -65,6 +73,7 @@ public class Pathfinder : MonoBehaviour
 
         isCompleted = false;
         m_iterations = 0;
+        m_startNode.distanceTraveled = 0;
     }
     public IEnumerator SearchRoutine(float timeStep = 0.1f)
     {
@@ -82,7 +91,14 @@ public class Pathfinder : MonoBehaviour
                     m_exploredNodes.Add(currentNode);
                 }
 
-                ExpandFrontier(currentNode);
+                if (mode == Mode.BFS)
+                {
+                    ExpandFrontierBFS(currentNode);
+                }
+                else if (mode == Mode.Dijkstra)
+                {
+                    ExpandFrontierDijkstra(currentNode);
+                }
 
                 CheckIfGoalReached();
 
@@ -100,6 +116,7 @@ public class Pathfinder : MonoBehaviour
 
         FinalRendering(); //just to show the final result
         Debug.Log("PATHFINDER: time elapse: " + (Time.time - timeStart).ToString() + " seconds");
+        Debug.Log("PATHFINDER: " + "(" + mode.ToString() + ") " + "total distance: " + m_goalNode.distanceTraveled.ToString());
     }
 
     private void CheckIfGoalReached()
@@ -113,10 +130,8 @@ public class Pathfinder : MonoBehaviour
 
     private void FinalRendering()
     {
-        if (showColor)
-        {
-            ColorRendering();
-        }
+        ColorPathNodes();
+        ColorStartAndGoalNodes();
         if (showArrows)
         {
             m_graphView.ShowNodeArrows(m_pathNodes.ToList());
@@ -181,7 +196,7 @@ public class Pathfinder : MonoBehaviour
         }
     }
 
-    void ExpandFrontier(Node node)
+    void ExpandFrontierBFS(Node node)
     {
         if (node != null)
         {
@@ -190,6 +205,9 @@ public class Pathfinder : MonoBehaviour
                 if (!m_exploredNodes.Contains(node.neighbors[i])
                     && !m_frontierNodes.Contains(node.neighbors[i]))
                 {
+                    float distanceToNeighbor = m_graph.GetNodeDistance(node, node.neighbors[i]);
+                    node.neighbors[i].distanceTraveled = distanceToNeighbor + node.distanceTraveled;
+                    
                     node.neighbors[i].previous = node;
                     m_frontierNodes.Enqueue(node.neighbors[i]);
                 }
@@ -197,6 +215,33 @@ public class Pathfinder : MonoBehaviour
         }
     }
 
+    void ExpandFrontierDijkstra(Node node)
+    {
+        if (node != null)
+        {
+            for (int i = 0; i < node.neighbors.Count; i++)
+            {
+                if (!m_exploredNodes.Contains(node.neighbors[i]))
+                {
+                    float distanceToNeighbor = m_graph.GetNodeDistance(node, node.neighbors[i]);
+                    float newDistanceTraveled = distanceToNeighbor + node.distanceTraveled;
+                    
+                    //only when the new distance is less then we assigned it to the prev. Make sure it would always be the shortest route.
+                    if (newDistanceTraveled < node.neighbors[i].distanceTraveled) 
+                    {
+                        node.neighbors[i].previous = node;
+                        node.neighbors[i].distanceTraveled = newDistanceTraveled;
+                    }
+                    
+                    if (!m_frontierNodes.Contains(node.neighbors[i]))
+                    {
+                        m_frontierNodes.Enqueue(node.neighbors[i]);
+                    }
+                    
+                }
+            }
+        }
+    }
     List<Node> GetPathNodes(Node endNode)
     {
         List<Node> path = new List<Node>();

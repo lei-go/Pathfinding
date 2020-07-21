@@ -22,12 +22,12 @@ public class Graph : MonoBehaviour
         new Vector2(0f,-1f),
         new Vector2(-1f,0f),
         new Vector2(1f,0f),
-        /*
+        
         new Vector2(-1f,1f),
         new Vector2(1f,1f),
         new Vector2(-1f,-1f),
         new Vector2(1f,-1f)
-        */
+        
     };
 
     public void Init(int[,] mapData)
@@ -99,5 +99,19 @@ public class Graph : MonoBehaviour
         return GetNeighbors(x, y, nodes, allDirections);
     }
 
+    //considered all 8 DOFs
+    public float GetNodeDistance(Node source, Node target)
+    {
+        int dx = Mathf.Abs(target.xIndex - source.xIndex);
+        int dy = Mathf.Abs(target.yIndex - source.yIndex);
+        
+        int min = Mathf.Min(dx, dy);
+        int max = Mathf.Max(dx, dy);
 
+        int diagonalSteps = min;
+        int straightSteps = max - min;
+        
+        float distance = 1.4f * diagonalSteps + straightSteps;
+        return distance;
+    }
 }

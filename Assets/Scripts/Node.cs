@@ -19,6 +19,7 @@ public class Node //we dont need to inherit from the monobehavior
     public int yIndex = -1; 
 
     public Vector3 position; //position of the node
+    public float distanceTraveled = Mathf.Infinity; //for the more advanced method
 
     public List<Node> neighbors = new List<Node>(); // a list of neighboring nodes
     public Node previous = null; //an indicator in the final computed path that tells algo how to get to the current node
