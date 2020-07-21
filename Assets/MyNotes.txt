@@ -1,0 +1,8 @@
+1) BFS: the most fundamental of all
+
+on top of BFS, few algorithms have been developed to improve
+searching efficiency, with A* search being the industrial std.
+
+2) Dijkstra: BFS but with distance as a weight, so the final solution
+route must be the shortest one (still time-consuming tho as BFS)
+
