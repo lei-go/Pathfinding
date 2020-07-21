@@ -21,9 +21,15 @@ public class Pathfinder : MonoBehaviour
     public Color exploredColor = Color.grey;
     public Color pathColor = Color.cyan;
 
-    public bool isCompleted = false;
-    int m_iterations = 0;
+    //was gonna make arrows on the path a diff color but nah overcomplicated
+    //public Color32 pathArrowColor = new Color32(255,215,0,255); //gold
 
+    bool isCompleted = false;
+    public bool showIterations = true;
+    public bool showArrows = true;
+    public bool showColor = true;
+    public bool exitOnGoal = true;
+    int m_iterations = 0;
 
     public void Init(Graph graph, GraphView graphView, Node start, Node goal)
     {
@@ -42,7 +48,7 @@ public class Pathfinder : MonoBehaviour
         m_graphView = graphView;
         m_startNode = start;
         m_goalNode = goal;
-        SecondaryColoring();
+        ColorRendering();
 
         m_frontierNodes = new Queue<Node>();
         m_frontierNodes.Enqueue(start);
@@ -60,12 +66,80 @@ public class Pathfinder : MonoBehaviour
         isCompleted = false;
         m_iterations = 0;
     }
-
-    void SecondaryColoring()
+    public IEnumerator SearchRoutine(float timeStep = 0.1f)
     {
-        SecondaryColoring(m_graphView,m_startNode,m_goalNode);
+        float timeStart = Time.time;
+        yield return null;
+        while (!isCompleted)
+        {
+            if (m_frontierNodes.Count > 0)
+            {
+                Node currentNode = m_frontierNodes.Dequeue();
+                m_iterations++;
+
+                if (!m_exploredNodes.Contains(currentNode))
+                {
+                    m_exploredNodes.Add(currentNode);
+                }
+
+                ExpandFrontier(currentNode);
+
+                CheckIfGoalReached();
+
+                if (showIterations)
+                {
+                    AnimateIterations();
+                    yield return new WaitForSeconds(timeStep);
+                }
+            }
+            else
+            {
+                isCompleted = true;
+            }
+        }
+
+        FinalRendering(); //just to show the final result
+        Debug.Log("PATHFINDER: time elapse: " + (Time.time - timeStart).ToString() + " seconds");
     }
-    private void SecondaryColoring(GraphView graphView, Node start, Node goal)
+
+    private void CheckIfGoalReached()
+    {
+        if (m_frontierNodes.Contains(m_goalNode))
+        {
+            m_pathNodes = GetPathNodes(m_goalNode);
+            if (exitOnGoal) isCompleted = true;
+        }
+    }
+
+    private void FinalRendering()
+    {
+        if (showColor)
+        {
+            ColorRendering();
+        }
+        if (showArrows)
+        {
+            m_graphView.ShowNodeArrows(m_pathNodes.ToList());
+        }   
+    }
+
+    private void AnimateIterations()
+    {
+            if (showColor)
+            {
+                ColorRendering();
+            }
+            if (showArrows)
+            {
+                m_graphView.ShowNodeArrows(m_frontierNodes.ToList());
+            }   
+    }
+
+    void ColorRendering()
+    {
+        ColorRendering(m_graphView,m_startNode,m_goalNode);
+    }
+    private void ColorRendering(GraphView graphView, Node start, Node goal)
     {
         //color frontier first, then path, then start and goal
         //do not change sequence
@@ -104,42 +178,6 @@ public class Pathfinder : MonoBehaviour
         if (m_exploredNodes != null)
         {
             m_graphView.ColorNodes(m_exploredNodes, exploredColor);
-        }
-    }
-
-    public IEnumerator SearchRoutine(float timeStep = 0.1f)
-    {
-        yield return null;
-        while (!isCompleted)
-        {
-            if (m_frontierNodes.Count > 0)
-            {
-                Node currentNode = m_frontierNodes.Dequeue();
-                m_iterations++;
-
-                if (!m_exploredNodes.Contains(currentNode))
-                {
-                    m_exploredNodes.Add(currentNode);
-                }
-
-                ExpandFrontier(currentNode);
-                
-
-                if (m_frontierNodes.Contains(m_goalNode))
-                {
-                    m_pathNodes = GetPathNodes(m_goalNode);
-                    isCompleted = true;
-                }
-
-                SecondaryColoring();
-                m_graphView.ShowNodeArrows(m_frontierNodes.ToList());
-
-                yield return new WaitForSeconds(timeStep);
-            }
-            else
-            {
-                isCompleted = true;
-            }
         }
     }
 

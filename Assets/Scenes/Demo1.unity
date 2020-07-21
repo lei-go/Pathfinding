@@ -363,10 +363,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DemoController
       objectReference: {fileID: 0}
-    - target: {fileID: 5346830407288764591, guid: 10c65cfcc418cd1489dfb3cf56507b1b,
+    - target: {fileID: 6003435692964823962, guid: 10c65cfcc418cd1489dfb3cf56507b1b,
         type: 3}
-      propertyPath: timeStep
-      value: 0.02
-      objectReference: {fileID: 0}
+      propertyPath: textureMap
+      value: 
+      objectReference: {fileID: 2800000, guid: ca838970df7a96d42957a4df5e677bf2, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 10c65cfcc418cd1489dfb3cf56507b1b, type: 3}
