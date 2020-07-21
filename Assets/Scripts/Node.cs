@@ -7,7 +7,11 @@ using UnityEngine;
 public enum NodeType //enum is like creating a variable type by ourselves
 {
     Open = 0,
-    Blocked = 1
+    Blocked = 1,
+    LightTerrain = 2,
+    MediumTerrain = 3,
+    HeavyTerrain = 4
+
 }
 
 public class Node: IComparable<Node> //we dont need to inherit from the monobehavior

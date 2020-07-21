@@ -28,6 +28,10 @@ public class Pathfinder : MonoBehaviour
     public Color exploredColor = Color.grey;
     public Color pathColor = Color.cyan;
 
+    bool m_lerpColor = true;
+    float m_lerpValue = 0.7f;
+
+
     //was gonna make arrows on the path a diff color but nah overcomplicated
     //public Color32 pathArrowColor = new Color32(255,215,0,255); //gold
 
@@ -166,7 +170,7 @@ public class Pathfinder : MonoBehaviour
     private void ColorPathNodes()
     {
         if (m_pathNodes != null && m_pathNodes.Count > 0)
-        {m_graphView.ColorNodes(m_pathNodes,pathColor);}
+        {m_graphView.ColorNodes(m_pathNodes,pathColor,m_lerpColor,m_lerpValue * 2f);}
     }
 
     private void ColorStartAndGoalNodes()
@@ -188,11 +192,11 @@ public class Pathfinder : MonoBehaviour
     {
         if (m_frontierNodes != null)
         {
-            m_graphView.ColorNodes(m_frontierNodes.ToList(), frontierColor);
+            m_graphView.ColorNodes(m_frontierNodes.ToList(), frontierColor, m_lerpColor, m_lerpValue);
         }
         if (m_exploredNodes != null)
         {
-            m_graphView.ColorNodes(m_exploredNodes, exploredColor);
+            m_graphView.ColorNodes(m_exploredNodes, exploredColor, m_lerpColor, m_lerpValue);
         }
     }
 
@@ -206,7 +210,7 @@ public class Pathfinder : MonoBehaviour
                     && !m_frontierNodes.Contains(node.neighbors[i]))
                 {
                     float distanceToNeighbor = m_graph.GetNodeDistance(node, node.neighbors[i]);
-                    node.neighbors[i].distanceTraveled = distanceToNeighbor + node.distanceTraveled;
+                    node.neighbors[i].distanceTraveled = distanceToNeighbor + node.distanceTraveled + (int) node.nodeType; //the last item is extra penalty from the terrain type
                     
                     node.neighbors[i].previous = node;
 
@@ -229,7 +233,7 @@ public class Pathfinder : MonoBehaviour
                 if (!m_exploredNodes.Contains(node.neighbors[i]))
                 {
                     float distanceToNeighbor = m_graph.GetNodeDistance(node, node.neighbors[i]);
-                    float newDistanceTraveled = distanceToNeighbor + node.distanceTraveled;
+                    float newDistanceTraveled = distanceToNeighbor + node.distanceTraveled + (int) node.nodeType;
                     
                     //only when the new distance is less then we assigned it to the prev. Make sure it would always be the shortest route.
                     if (newDistanceTraveled < node.neighbors[i].distanceTraveled) 
