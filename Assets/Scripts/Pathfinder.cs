@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 public class Pathfinder : MonoBehaviour
 {
@@ -66,17 +67,23 @@ public class Pathfinder : MonoBehaviour
     }
     private void SecondaryColoring(GraphView graphView, Node start, Node goal)
     {
-        if (m_frontierNodes != null)
-        {
-            graphView.ColorNodes(m_frontierNodes.ToList(), frontierColor);
-        }
-        if (m_exploredNodes != null)
-        {
-            graphView.ColorNodes(m_exploredNodes, exploredColor);
-        }
+        //color frontier first, then path, then start and goal
+        //do not change sequence
+        ColorFrontAndExpNodes();
+        ColorPathNodes();
+        ColorStartAndGoalNodes();
+    }
 
-        NodeView startNodeView = graphView.nodeViews[start.xIndex, start.yIndex];
-        NodeView goalNodeView = graphView.nodeViews[goal.xIndex, goal.yIndex];
+    private void ColorPathNodes()
+    {
+        if (m_pathNodes != null && m_pathNodes.Count > 0)
+        {m_graphView.ColorNodes(m_pathNodes,pathColor);}
+    }
+
+    private void ColorStartAndGoalNodes()
+    {
+        NodeView startNodeView = m_graphView.nodeViews[m_startNode.xIndex, m_startNode.yIndex];
+        NodeView goalNodeView = m_graphView.nodeViews[m_goalNode.xIndex, m_goalNode.yIndex];
 
         if (startNodeView != null)
         {
@@ -85,6 +92,18 @@ public class Pathfinder : MonoBehaviour
         if (goalNodeView != null)
         {
             goalNodeView.ColorNode(goalColor);
+        }
+    }
+
+    private void ColorFrontAndExpNodes()
+    {
+        if (m_frontierNodes != null)
+        {
+            m_graphView.ColorNodes(m_frontierNodes.ToList(), frontierColor);
+        }
+        if (m_exploredNodes != null)
+        {
+            m_graphView.ColorNodes(m_exploredNodes, exploredColor);
         }
     }
 
@@ -104,6 +123,14 @@ public class Pathfinder : MonoBehaviour
                 }
 
                 ExpandFrontier(currentNode);
+                
+
+                if (m_frontierNodes.Contains(m_goalNode))
+                {
+                    m_pathNodes = GetPathNodes(m_goalNode);
+                    isCompleted = true;
+                }
+
                 SecondaryColoring();
                 m_graphView.ShowNodeArrows(m_frontierNodes.ToList());
 
@@ -132,7 +159,23 @@ public class Pathfinder : MonoBehaviour
         }
     }
 
+    List<Node> GetPathNodes(Node endNode)
+    {
+        List<Node> path = new List<Node>();
 
+        if (endNode != null)
+        {
+            path.Add(endNode);
+            Node currentNode = endNode.previous;
+
+            while (currentNode != null)
+            {
+                path.Insert(0, currentNode);
+                currentNode = currentNode.previous;
+            }
+        }
+        return path;
+    }
 
 
 
