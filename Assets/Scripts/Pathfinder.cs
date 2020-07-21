@@ -18,7 +18,7 @@ public class Pathfinder : MonoBehaviour
     Graph m_graph;
     GraphView m_graphView;
 
-    Queue<Node> m_frontierNodes;
+    PriorityQueue<Node> m_frontierNodes;
     List<Node> m_exploredNodes;
     List<Node> m_pathNodes;
 
@@ -58,7 +58,7 @@ public class Pathfinder : MonoBehaviour
         m_goalNode = goal;
         ColorRendering();
 
-        m_frontierNodes = new Queue<Node>();
+        m_frontierNodes = new PriorityQueue<Node>();
         m_frontierNodes.Enqueue(start);
         m_exploredNodes = new List<Node>();
         m_pathNodes = new List<Node>();
@@ -209,6 +209,11 @@ public class Pathfinder : MonoBehaviour
                     node.neighbors[i].distanceTraveled = distanceToNeighbor + node.distanceTraveled;
                     
                     node.neighbors[i].previous = node;
+
+                    //bc the new priority queue, the old BFS will behave abnormally since no distance used and the priority is messed up
+                    //to make it behave like the original BFS, it is necessary to assign fake priority to make the first explored ones always go first
+                    node.neighbors[i].priority = m_exploredNodes.Count; 
+                    
                     m_frontierNodes.Enqueue(node.neighbors[i]);
                 }
             }
@@ -235,6 +240,7 @@ public class Pathfinder : MonoBehaviour
                     
                     if (!m_frontierNodes.Contains(node.neighbors[i]))
                     {
+                        node.neighbors[i].priority = (int) node.neighbors[i].distanceTraveled;
                         m_frontierNodes.Enqueue(node.neighbors[i]);
                     }
                     

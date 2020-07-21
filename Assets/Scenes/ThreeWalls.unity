@@ -376,7 +376,7 @@ PrefabInstance:
     - target: {fileID: 5346830407288764591, guid: 10c65cfcc418cd1489dfb3cf56507b1b,
         type: 3}
       propertyPath: timeStep
-      value: 0.05
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 6003435692964823962, guid: 10c65cfcc418cd1489dfb3cf56507b1b,
         type: 3}
@@ -386,12 +386,12 @@ PrefabInstance:
     - target: {fileID: 9081292759079804195, guid: 10c65cfcc418cd1489dfb3cf56507b1b,
         type: 3}
       propertyPath: showArrows
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9081292759079804195, guid: 10c65cfcc418cd1489dfb3cf56507b1b,
         type: 3}
       propertyPath: showIterations
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9081292759079804195, guid: 10c65cfcc418cd1489dfb3cf56507b1b,
         type: 3}
