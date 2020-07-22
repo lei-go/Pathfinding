@@ -26,7 +26,7 @@ public class Node: IComparable<Node> //we dont need to inherit from the monobeha
     public Vector3 position; //position of the node
     public float distanceTraveled = Mathf.Infinity; //for the more advanced method
 
-    public int priority; //will be twerked in the future by distanceTraveled
+    public float priority; //will be twerked in the future by distanceTraveled
 
 
     public List<Node> neighbors = new List<Node>(); // a list of neighboring nodes

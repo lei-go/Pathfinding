@@ -290,7 +290,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 15.8, y: 19.9, z: 8.5}
+  m_LocalPosition: {x: 16, y: 20, z: 9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -365,29 +365,34 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5346830407288764591, guid: 10c65cfcc418cd1489dfb3cf56507b1b,
         type: 3}
-      propertyPath: startY
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5346830407288764591, guid: 10c65cfcc418cd1489dfb3cf56507b1b,
-        type: 3}
       propertyPath: goalX
-      value: 27
+      value: 29
       objectReference: {fileID: 0}
     - target: {fileID: 5346830407288764591, guid: 10c65cfcc418cd1489dfb3cf56507b1b,
         type: 3}
       propertyPath: goalY
-      value: 16
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 5346830407288764591, guid: 10c65cfcc418cd1489dfb3cf56507b1b,
+        type: 3}
+      propertyPath: timeStep
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5346830407288764591, guid: 10c65cfcc418cd1489dfb3cf56507b1b,
+        type: 3}
+      propertyPath: startX
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5346830407288764591, guid: 10c65cfcc418cd1489dfb3cf56507b1b,
+        type: 3}
+      propertyPath: startY
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6003435692964823962, guid: 10c65cfcc418cd1489dfb3cf56507b1b,
         type: 3}
       propertyPath: textureMap
       value: 
-      objectReference: {fileID: 2800000, guid: 8801cc427d1bed0469b48cfe9a95869b, type: 3}
-    - target: {fileID: 9081292759079804195, guid: 10c65cfcc418cd1489dfb3cf56507b1b,
-        type: 3}
-      propertyPath: mode
-      value: 0
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2800000, guid: faf278366a1927b48849c404f19a4d02, type: 3}
     - target: {fileID: 9081292759079804195, guid: 10c65cfcc418cd1489dfb3cf56507b1b,
         type: 3}
       propertyPath: showArrows
@@ -395,7 +400,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9081292759079804195, guid: 10c65cfcc418cd1489dfb3cf56507b1b,
         type: 3}
-      propertyPath: exitOnGoal
+      propertyPath: showIterations
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9081292759079804195, guid: 10c65cfcc418cd1489dfb3cf56507b1b,
+        type: 3}
+      propertyPath: mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 9081292759079804195, guid: 10c65cfcc418cd1489dfb3cf56507b1b,
+        type: 3}
+      propertyPath: showColor
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []

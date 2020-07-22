@@ -9,7 +9,9 @@ public class Pathfinder : MonoBehaviour
     public enum Mode
     {
         BFS = 0,
-        Dijkstra = 1
+        Dijkstra = 1,
+        Greedy = 2,
+        AStar = 3
     }
 
     public Mode mode = Mode.BFS;
@@ -81,7 +83,7 @@ public class Pathfinder : MonoBehaviour
     }
     public IEnumerator SearchRoutine(float timeStep = 0.1f)
     {
-        float timeStart = Time.time;
+        float timeStart = Time.realtimeSinceStartup;
         yield return null;
         while (!isCompleted)
         {
@@ -103,6 +105,15 @@ public class Pathfinder : MonoBehaviour
                 {
                     ExpandFrontierDijkstra(currentNode);
                 }
+                else if (mode == Mode.Greedy)
+                {
+                    ExpandFrontierGreedyBestFirst(currentNode);
+                }
+                else if (mode == Mode.AStar)
+                {
+                    ExpandFrontierAStar(currentNode);
+                }
+                
 
                 CheckIfGoalReached();
 
@@ -119,9 +130,11 @@ public class Pathfinder : MonoBehaviour
         }
 
         FinalRendering(); //just to show the final result
-        Debug.Log("PATHFINDER: time elapse: " + (Time.time - timeStart).ToString() + " seconds");
+        Debug.Log("PATHFINDER: time elapse: " + (Time.realtimeSinceStartup - timeStart).ToString() + " seconds");
         Debug.Log("PATHFINDER: " + "(" + mode.ToString() + ") " + "total distance: " + m_goalNode.distanceTraveled.ToString());
     }
+
+    
 
     private void CheckIfGoalReached()
     {
@@ -244,7 +257,7 @@ public class Pathfinder : MonoBehaviour
                     
                     if (!m_frontierNodes.Contains(node.neighbors[i]))
                     {
-                        node.neighbors[i].priority = (int) node.neighbors[i].distanceTraveled;
+                        node.neighbors[i].priority = node.neighbors[i].distanceTraveled;
                         m_frontierNodes.Enqueue(node.neighbors[i]);
                     }
                     
@@ -252,6 +265,66 @@ public class Pathfinder : MonoBehaviour
             }
         }
     }
+    
+    void ExpandFrontierGreedyBestFirst(Node node)
+    {
+        if (node != null)
+        {
+            for (int i = 0; i < node.neighbors.Count; i++)
+            {
+                if (!m_exploredNodes.Contains(node.neighbors[i])
+                    && !m_frontierNodes.Contains(node.neighbors[i]))
+                {
+                    float distanceToNeighbor = m_graph.GetNodeDistance(node, node.neighbors[i]);
+                    node.neighbors[i].distanceTraveled = distanceToNeighbor + node.distanceTraveled + (int) node.nodeType; //the last item is extra penalty from the terrain type
+                    
+                    node.neighbors[i].previous = node;
+
+                    //priotize the frontier nodes over their individual distance to the goal
+                    if (m_graph != null)
+                    {
+                        //for performance improv, one can use Manhattan method
+                        node.neighbors[i].priority = m_graph.GetNodeDistance(node.neighbors[i], m_goalNode);
+                    }
+                    
+                    m_frontierNodes.Enqueue(node.neighbors[i]);
+                }
+            }
+        }
+    }
+
+    private void ExpandFrontierAStar(Node node)
+    {
+        if (node != null)
+        {
+            for (int i = 0; i < node.neighbors.Count; i++)
+            {
+                if (!m_exploredNodes.Contains(node.neighbors[i]))
+                {
+                    float distanceToNeighbor = m_graph.GetNodeDistance(node, node.neighbors[i]);
+                    float newDistanceTraveled = distanceToNeighbor + node.distanceTraveled + (int) node.nodeType;
+                    
+                    //only when the new distance is less then we assigned it to the prev. Make sure it would always be the shortest route.
+                    if (newDistanceTraveled < node.neighbors[i].distanceTraveled) 
+                    {
+                        node.neighbors[i].previous = node;
+                        node.neighbors[i].distanceTraveled = newDistanceTraveled;
+                    }
+                    
+                    if (!m_frontierNodes.Contains(node.neighbors[i]) && m_graph != null)
+                    {
+                        //hScore is the frontier's distance to goal, gScore is the accumulated distance from start to goal
+                        float hScore = m_graph.GetNodeDistance(node.neighbors[i], m_goalNode);
+                        float gScore = node.neighbors[i].distanceTraveled;
+                        node.neighbors[i].priority = (gScore + hScore);
+                        m_frontierNodes.Enqueue(node.neighbors[i]);
+                    }
+                    
+                }
+            }
+        }
+    }
+    
     List<Node> GetPathNodes(Node endNode)
     {
         List<Node> path = new List<Node>();
